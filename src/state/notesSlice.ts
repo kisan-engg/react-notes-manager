@@ -1,33 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export interface Note {
+    id: number,
     title: string,
     text: string
 }
-export interface Notes extends Array<Note> { }
-export interface NoteUpdated {
-    note: Note,
-    index: number
-}
-
+export interface Notes extends Array<Note> {}
 interface NotesState {
     editMode: boolean,
-    activeIndex?: number,
     activeNote: Note,
     notes: Notes
 }
-
 const initialState: NotesState = {
     editMode: false,
-    activeNote: {} as Note,
-    notes: [
-        {
-            title: 'title',
-            text: 'text'
-        }
-    ]
+    activeNote: { title: '', text: ''} as Note,
+    notes: []
 }
-
 
 const notesSlice = createSlice({
     name: 'notesList',
@@ -39,30 +27,20 @@ const notesSlice = createSlice({
         changeNoteText: (state, action: PayloadAction<string>) => {
             state.activeNote.text = action.payload
         },
-        add: (state) => {
-            state.notes.push(state.activeNote)
+        reset: (state) => {
+            state.activeNote = initialState.activeNote
         },
-        delete: (state, action: PayloadAction<number>) => {
-            state.notes.splice(action.payload, 1)
-        },
-        update: (state) => {
-            if (state.editMode && state.activeIndex) {
-                state.notes.splice(state.activeIndex, 0, state.activeNote)
-                state.editMode = false
-                state.activeIndex = -1
-                state.activeNote = {} as Note
-            } else {
-                console.error("Edit mode disabled or Active note can not be found.")
-            }
-        },
-        enableEditMode: (state, action: PayloadAction<number>) => {
-            state.notes.splice(action.payload, 1)
+        resetEdit: (state) => {
+            state.activeNote = initialState.activeNote
+            state.editMode = false               
+        },        
+        enableEditMode: (state, action: PayloadAction<Note>) => {            
+            state.activeNote = {...action.payload}
             state.editMode = true;
-            state.activeIndex = action.payload;
-            state.activeNote = state.notes[action.payload]
         }
     }
-})
+});
+
 
 export const noteAction = notesSlice.actions
 

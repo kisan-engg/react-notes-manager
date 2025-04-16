@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Divider, Flex, Layout, Row, Space } from 'antd';
-import UserMenu from '../components/user-manu';
+import UserMenu from '../components/user-menu';
 
 const { Header, Footer, Content } = Layout;
 
